@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: r-afonso < r-afonso@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:29:58 by r-afonso          #+#    #+#             */
-/*   Updated: 2023/06/11 21:53:38 by r-afonso         ###   ########.fr       */
+/*   Updated: 2023/06/11 21:53:55 by r-afonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,15 @@ char	*rebuild_after_newline(char *save_buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*save_buffer;
+	static char	*save_buffer[4096];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	save_buffer = get_read(fd, save_buffer);
-	if (!save_buffer)
+	save_buffer[fd] = get_read(fd, save_buffer[fd]);
+	if (!save_buffer[fd])
 		return (NULL);
-	line = get_last_or_new_line(save_buffer);
-	save_buffer = rebuild_after_newline(save_buffer);
+	line = get_last_or_new_line(save_buffer[fd]);
+	save_buffer[fd] = rebuild_after_newline(save_buffer[fd]);
 	return (line);
 }
